@@ -1,5 +1,6 @@
 package com.ai.android.picker;
 
+import java.text.DateFormatSymbols;
 import java.util.Calendar;
 
 import android.content.Context;
@@ -81,23 +82,15 @@ public class DatePicker extends FrameLayout {
 
 	private void initMonthDisplay() {
 		mMonthDisplay = new String[12];
-		mMonthDisplay[0] = "Jan";
-		mMonthDisplay[1] = "Feb";
-		mMonthDisplay[2] = "Mar";
-		mMonthDisplay[3] = "Apr";
-		mMonthDisplay[4] = "May";
-		mMonthDisplay[5] = "Jun";
-		mMonthDisplay[6] = "Jul";
-		mMonthDisplay[7] = "Aug";
-		mMonthDisplay[8] = "Sep";
-		mMonthDisplay[9] = "Oct";
-		mMonthDisplay[10] = "Nov";
-		mMonthDisplay[11] = "Dec";
+		DateFormatSymbols ds = new DateFormatSymbols();
+		for(int i=0; i<12; i++){
+			mMonthDisplay[i] = ds.getMonths()[i];
+		}
 	}
 
 	private void updateDate() {
-		System.out.println("Month: " + mCalendar.get(Calendar.MONTH) + " Max: "
-				+ mCalendar.getActualMaximum(Calendar.DATE));
+//		System.out.println("Month: " + mCalendar.get(Calendar.MONTH) + " Max: "
+//				+ mCalendar.getActualMaximum(Calendar.DATE));
 		mDayPicker.setMinValue(mCalendar.getActualMinimum(Calendar.DATE));
 		mDayPicker.setMaxValue(mCalendar.getActualMaximum(Calendar.DATE));
 		mDayPicker.setValue(mCalendar.get(Calendar.DATE));
@@ -110,11 +103,13 @@ public class DatePicker extends FrameLayout {
 	}
 
 	public String getDate() {
-		String date = mYearPicker.getValue() + "-"
-				+ (mMonthPicker.getValue() + 1) + "-" + mDayPicker.getValue();
-		return date;
-
+		return getDate("%s-%02d-%02d");
 	}
+
+	public String getDate(String formatString){
+		return String.format(formatString, mYearPicker.getValue(), mMonthPicker.getValue(), mDayPicker.getValue());
+	}
+
 
 	public int getDay() {
 		return mCalendar.get(Calendar.DAY_OF_MONTH);
